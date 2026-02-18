@@ -1,20 +1,69 @@
-# Credit Profile Service
+# 🚀 Credit Profile Service
 
-This simple Spring Boot microservice demonstrates a basic credit profiling API. It exposes two endpoints:
+A production-style Spring Boot microservice exposing RESTful APIs for managing customer credit profiles.
 
-* `GET /customers` – returns a list of customers with their credit scores.
-* `GET /customers/{id}` – returns the credit details of a single customer by ID.
+This project demonstrates backend engineering best practices including layered architecture, clean code organization, RESTful API design, and extensibility toward real-world financial systems.
 
-The project is intended as a starting point for demonstrating backend skills such as building REST APIs with Spring Boot, structuring a Java project, and organizing code using packages and classes. You can extend this service by connecting it to a database, adding CRUD operations, or introducing authentication.
+---
 
-## Getting Started
+## 📌 Overview
+
+The Credit Profile Service provides APIs to retrieve customer credit score data.  
+
+Although currently implemented with in-memory storage for simplicity, the project is structured following microservice architecture principles and can be easily extended into a production-ready system.
+
+---
+
+## 🌐 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|------------|
+| GET | `/api/v1/customers` | Retrieve all customer credit profiles |
+| GET | `/api/v1/customers/{id}` | Retrieve a specific customer’s credit profile by ID |
+
+---
+
+## 🏗 Architecture & Design
+
+The service follows a clean layered architecture:
+
+controller → service → repository → model
+
+
+### Layers
+
+- **Controller Layer** – Handles HTTP requests and response mapping
+- **Service Layer** – Contains business logic and validation
+- **Repository Layer** – Abstracted data access (currently in-memory implementation)
+- **Model Layer** – Domain entities representing customer credit data
+
+This structure ensures:
+
+- Clear separation of concerns  
+- Maintainability  
+- Testability  
+- Scalability readiness  
+
+---
+
+## 🛠 Tech Stack
+
+- Java 17  
+- Spring Boot 3  
+- Gradle  
+- RESTful API design  
+- Clean Architecture principles  
+
+---
+
+## ▶ Running the Application
 
 ### Prerequisites
 
-* Java 17 or newer
-* Gradle (if you prefer not to use the Gradle wrapper included)
+- Java 17+
+- Gradle (optional — Gradle Wrapper included)
 
-### Running the Application
+### Start Locally
 
 Clone the repository and run the application using the Gradle wrapper:
 
