@@ -1,48 +1,147 @@
-# Credit Profile Service
+# Credit Profile Service (Spring Boot + PostgreSQL)
 
-This simple Spring Boot microservice demonstrates a basic credit profiling API. It exposes two endpoints:
+A small **Spring Boot** backend service that exposes REST endpoints to manage customer credit data.
+Built as a portfolio-quality microservice with:
 
-* `GET /customers` – returns a list of customers with their credit scores.
-* `GET /customers/{id}` – returns the credit details of a single customer by ID.
+- **PostgreSQL** persistence
+- **Flyway** database migrations
+- **Swagger/OpenAPI** documentation
+- **Spring Actuator** health checks and metrics
+- DTO + validation + consistent error responses
 
-The project is intended as a starting point for demonstrating backend skills such as building REST APIs with Spring Boot, structuring a Java project, and organizing code using packages and classes. You can extend this service by connecting it to a database, adding CRUD operations, or introducing authentication.
+---
 
-## Getting Started
+## ✅ What This Project Demonstrates
 
-### Prerequisites
+- REST API design (CRUD-style endpoints)
+- Clean layering: Controller → Service → Repository
+- Data validation and structured error handling
+- Production-friendly infrastructure (Docker Compose + migrations)
+- Observability basics (health/info/metrics)
 
-* Java 17 or newer
-* Gradle (if you prefer not to use the Gradle wrapper included)
+---
 
-### Running the Application
+## 🛠 Tech Stack
 
-Clone the repository and run the application using the Gradle wrapper:
+- Java 17
+- Spring Boot 3
+- Spring Web
+- Spring Data JPA
+- PostgreSQL
+- Flyway
+- Springdoc OpenAPI (Swagger UI)
+- Spring Actuator
+- Gradle
+
+---
+
+## 📦 Project Structure
+
+```
+credit-profile-service/
+├── Dockerfile
+├── docker-compose.yml
+├── build.gradle
+├── settings.gradle
+├── src/main/java/com/example/creditprofile
+│   ├── CreditProfileServiceApplication.java
+│   ├── controller
+│   │   └── CustomerController.java
+│   ├── dto
+│   │   ├── CreateCustomerRequest.java
+│   │   └── CustomerResponse.java
+│   ├── entity
+│   │   └── CustomerEntity.java
+│   ├── exception
+│   │   ├── GlobalExceptionHandler.java
+│   │   └── NotFoundException.java
+│   ├── repository
+│   │   └── CustomerRepository.java
+│   └── service
+│       └── CustomerService.java
+└── src/main/resources
+    ├── application.yml
+    └── db/migration
+        └── V1__init.sql
+``` id="v4l1"
+
+---
+
+## ▶ Run with Docker (Recommended)
+
+This starts **PostgreSQL + API** and runs Flyway migrations automatically.
+
+```bash
+docker-compose up --build
+```
+
+Service endpoints:
+
+- API: `http://localhost:8080`
+- Swagger UI: `http://localhost:8080/swagger-ui`
+- OpenAPI JSON: `http://localhost:8080/api-docs`
+- Health: `http://localhost:8080/actuator/health`
+
+---
+
+## ▶ Run Locally (Without Docker)
+
+1) Start PostgreSQL locally and create a database:
+
+- DB: `creditdb`
+- User: `credit`
+- Password: `credit`
+
+2) Run the service:
 
 ```bash
 ./gradlew bootRun
 ```
 
-The service will start on `http://localhost:8080`.
+---
 
-### Building a JAR
+## 🔍 API Endpoints
 
-To build an executable JAR file, run:
-
-```bash
-./gradlew clean build
-```
-
-The resulting JAR will be located in `build/libs/credit-profile-service-0.0.1-SNAPSHOT.jar`.
-
-### Making Requests
-
-You can test the endpoints with `curl` or a tool like Postman:
+### List customers (paged)
 
 ```bash
-curl http://localhost:8080/customers
-curl http://localhost:8080/customers/1
+curl "http://localhost:8080/customers?page=0&size=20"
 ```
 
-## License
+### Get customer by ID
 
-This project is licensed under the MIT License.
+```bash
+curl "http://localhost:8080/customers/1"
+```
+
+### Create customer
+
+```bash
+curl -X POST "http://localhost:8080/customers" \
+  -H "Content-Type: application/json" \
+  -d '{ "fullName": "Dani Costa", "creditScore": 710 }'
+```
+
+---
+
+## 🧪 Tests
+
+```bash
+./gradlew test
+```
+
+---
+
+## 🔥 Next Improvements (Nice portfolio upgrades)
+
+- Add filtering/search (e.g., minScore/maxScore)
+- Add a proper domain model for risk band / utilization
+- Add Redis caching for frequently requested customers
+- Add a Kafka event on customer creation/updates
+- Add Testcontainers-based integration tests for endpoints
+
+---
+
+## 📄 License
+
+MIT

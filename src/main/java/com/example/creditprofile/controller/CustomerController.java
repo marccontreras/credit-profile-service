@@ -1,36 +1,38 @@
 package com.example.creditprofile.controller;
 
-import com.example.creditprofile.model.Customer;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.creditprofile.dto.CreateCustomerRequest;
+import com.example.creditprofile.dto.CustomerResponse;
+import com.example.creditprofile.service.CustomerService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/customers")
 public class CustomerController {
 
-    private final List<Customer> customers;
+    private final CustomerService service;
 
-    public CustomerController() {
-        this.customers = new ArrayList<>();
-        // Initialize with some sample data
-        customers.add(new Customer(1L, "Alice", 750));
-        customers.add(new Customer(2L, "Bob", 680));
-        customers.add(new Customer(3L, "Charlie", 820));
+    public CustomerController(CustomerService service) {
+        this.service = service;
     }
 
-    @GetMapping("/customers")
-    public List<Customer> getAllCustomers() {
-        return customers;
+    @GetMapping
+    public Page<CustomerResponse> list(@PageableDefault(size = 20) Pageable pageable) {
+        return service.list(pageable);
     }
 
-    @GetMapping("/customers/{id}")
-    public Customer getCustomerById(@PathVariable Long id) {
-        return customers.stream()
-                .filter(customer -> customer.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    @GetMapping("/{id}")
+    public CustomerResponse get(@PathVariable Long id) {
+        return service.get(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerResponse create(@Valid @RequestBody CreateCustomerRequest request) {
+        return service.create(request);
     }
 }
